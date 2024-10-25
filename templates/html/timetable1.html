@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 70%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        select {
+            width: 100px;
+        }
+
+        input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <h1 style="text-align: center;">Computer Science Weekly TimeTable</h1>
+    <form action="/select_semester" method="post" style="text-align: center;">
+        <label for="departments">Select Department:</label>
+        <select name="departments" id="departments" onchange="this.form.submit()">
+            {% for depart in departments_list %}
+            <option value="{{ depart }}" >{{ depart }}</option>
+            {% endfor %}
+            <option value="{{ department }}" hidden selected>{{ department }}</option>
+        </select>
+        <label for="semesters">Select Semester:</label>
+        <select name="semesters" id="semesters" onchange="this.form.submit()">
+            {% for i in range(1, 5) %}
+            <option value="{{ i }}" >Semester {{ i }}</option>
+            {% endfor %}
+            <option value="{{semester}}" hidden selected>Semester {{semester}}</option>
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+    <table>
+        <tr>
+            <th>Slots</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+        </tr>
+        {% for i in range(1, 5) %}
+        <tr>
+            <td>{{ i }}</td>
+            {% for day in [1,2,3,4,5,6] %}
+            <td>
+
+                <form action="/add_slot" method="post">
+                    <input type="hidden" name="departments" value="{{department}}">
+                    <input type="hidden" name="semester" value="{{semester}}">
+                    <input type="hidden" name="slot" value="{{i}}">
+                    <input type="hidden" name="day" value="{{day}}">
+                    {% set key = slots_data[i-1][day-1]['course'] %}
+                    {% set value = slots_data[i-1][day-1]['teacher'] %}
+                    {% if value != ""%}
+                    {{ key }} - {{ value }}
+                    
+                    {%else%}
+                    <select name="courses" id="courses" required>
+                        <option value="" disabled selected>Select Course</option>
+                        {% for course in courses %}
+                        <option value="{{ course.value }}">{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="teachers" id="teachers" required>
+                        <option value="" disabled selected>Select Teacher</option>
+                        {% for teacher in all_teachers[i-1][day-1] %}
+                        <option value="{{ teacher }}">{{ teacher }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Add">
+                    {%endif%}
+                </form>
+
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

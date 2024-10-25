@@ -1,0 +1,13 @@
+flask
+flask-wtf
+flask-login
+flask-sqlalchemy
+flask-migrate
+pymysql  # For MySQL database (or replace with psycopg2 for PostgreSQL)
+flask-bootstrap
+flask-cors
+gunicorn
+python-dotenv
+flask-bcrypt
+flask-testing
+pulp  # Replace with ortools if you're using OR-Tools for timetable scheduling
